@@ -1,6 +1,14 @@
 import random
+from abc import abstractmethod, ABC
 
-class AI:
+
+class AiInterface(ABC):
+    @abstractmethod
+    def move(self, board, flag):
+        pass
+    
+
+class AI(AiInterface):
     def __init__(self) -> None:
         pass
     

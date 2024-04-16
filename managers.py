@@ -3,9 +3,90 @@ from abc import abstractmethod, ABC
 
 from constants import HEIGHT, WIDTH, SQUARE_SIZE
 
-    
+class BoardManagerInterface(ABC):
+    @abstractmethod
+    def clear_board(self):
+        pass
 
-class BoardManager:
+    @abstractmethod
+    def clear_scores(self):
+        pass
+    
+    @property
+    @abstractmethod
+    def board(self):
+        pass
+    @board.setter
+    @abstractmethod
+    def board(self, value):
+        pass
+
+    @property
+    @abstractmethod
+    def x_wins(self):
+        pass
+
+    @x_wins.setter
+    @abstractmethod
+    def x_wins(self, value):
+        pass
+    
+    @property
+    @abstractmethod
+    def o_wins(self):
+        pass
+
+    @o_wins.setter
+    @abstractmethod
+    def o_wins(self, value):
+        pass
+
+class BoardManager(BoardManagerInterface):
+    def __init__(self) -> None:
+        self.__board = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+        self.__x_wins = 0
+        self.__o_wins = 0
+    
+    def clear_board(self):
+        self.__board = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+    
+    def clear_scores(self):
+        self.__x_wins = 0
+        self.__o_wins = 0
+
+    @property
+    def board(self):
+        return self.__board
+
+    @board.setter
+    def board(self, value):
+        for row in value:
+            for el in row:
+                if el not in [0, 1, 2]:
+                    raise ValueError("Only (0, 1, 2) values are accpeted.")
+        self.__board = value
+
+    @property
+    def x_wins(self):
+        return self.__x_wins
+
+    @x_wins.setter
+    def x_wins(self, value):
+        if value < 0:
+                raise ValueError("Only zero or positive values allowed.")
+        self.__x_wins = value
+    
+    @property
+    def o_wins(self):
+        return self.__o_wins
+
+    @o_wins.setter
+    def o_wins(self, value):
+        if value < 0:
+                raise ValueError("Only zero or positive values allowed.")
+        self.__o_wins = value
+
+class DisplayManager:
     def __init__(self) -> None:
         self.__X_IMAGE = pygame.transform.scale(pygame.image.load("images/x.png"), (100, 100))
         self.__O_IMAGE = pygame.transform.scale(pygame.image.load("images/o.png"), (100, 100))
@@ -36,7 +117,15 @@ class BoardManager:
                     screen.blit(self.__O_IMAGE, (x + 125, y + 160))
 
 
-class GameManager:
+class GameManagerInterface(ABC):
+    @abstractmethod
+    def check_win(self, board):
+        pass
+    @abstractmethod
+    def is_ended(self, board):
+        pass
+
+class GameManager(GameManagerInterface):
     def __init__(self) -> None:
         pass
     

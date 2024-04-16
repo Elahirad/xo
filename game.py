@@ -3,20 +3,20 @@ from random import randint
 
 from constants import HEIGHT, WIDTH, SQUARE_SIZE
 from menus import MainMenu, SubMenu
-from ai import AI
-from managers import GameManager, BoardManager
+from ai import AiInterface
+from managers import DisplayManager, GameManagerInterface, BoardManagerInterface
 
 class Game:
-    def __init__(self) -> None:
+    def __init__(self, game_manager: GameManagerInterface, ai: AiInterface, board_manager: BoardManagerInterface) -> None:
         pygame.init()
         pygame.display.set_caption("XO Game")
         self.__state = 'MAIN_MENU'
         self.__screen = pygame.display.set_mode((WIDTH, HEIGHT))
         self.__clock = pygame.time.Clock()
-        self.__game_manager = GameManager()
-        self.__ai = AI()
+        self.__game_manager = game_manager
+        self.__ai = ai
+        self.__board_manager = board_manager
         self.__running = True
-        self.__board = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
         self.__x_wins = 0
         self.__o_wins = 0
         self.__player_flag = 1
@@ -24,18 +24,11 @@ class Game:
         self.__turn = 1
         self.__main_menu = MainMenu()
         self.__submenu = SubMenu()
-        self.__board_manager = BoardManager()
+        self.__display_manager = DisplayManager()
         self.__main_menu.show_main_menu(self.__screen)
         self.__BACK_X_Y = (55, 47)
         self.__BACK_SHAPE = (200, 90)
 
-    
-    def __clear_board(self) -> None:
-        self.__board = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
-
-    def __clear_scores(self) -> None:
-        self.__x_wins = 0
-        self.__o_wins = 0
 
     def __check_back(self, event):
         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -64,53 +57,53 @@ class Game:
                         clicked_row = int(mouseY // SQUARE_SIZE)
                         clicked_col = int(mouseX // SQUARE_SIZE)
                         if self.__state == 'PLAY_WITH_USER':
-                            if self.__board[clicked_row][clicked_col] == 0:
-                                self.__board[clicked_row][clicked_col] = self.__turn
+                            if self.__board_manager.board[clicked_row][clicked_col] == 0:
+                                self.__board_manager.board[clicked_row][clicked_col] = self.__turn
                                 if self.__turn == 1:
                                     self.__turn = 2
                                 elif self.__turn == 2:
                                     self.__turn = 1
                         else:
-                            if self.__turn == 1 and self.__board[clicked_row][clicked_col] == 0:
-                                self.__board[clicked_row][clicked_col] = 1
+                            if self.__turn == 1 and self.__board_manager.board[clicked_row][clicked_col] == 0:
+                                self.__board_manager.board[clicked_row][clicked_col] = 1
                                 self.__turn = 2
                 if self.__state == 'SUBMENU':
                     opt = self.__submenu.handle_mouse(event)
                     if opt == 'OPTION1':
                         self.__state = 'PLAY_WITH_CPU'
-                        self.__clear_board()
-                        self.__clear_scores()
+                        self.__board_manager.clear_board()
+                        self.__board_manager.clear_scores()
                         self.__turn = 2
                     elif opt == 'OPTION2':
                         self.__state = 'PLAY_WITH_CPU'
-                        self.__clear_board()
-                        self.__clear_scores()
+                        self.__board_manager.clear_board()
+                        self.__board_manager.clear_scores()
                         self.__turn = 1
                 if self.__state == 'MAIN_MENU':
                     opt = self.__main_menu.handle_mouse(event)
                     if opt == 'OPTION1':
                         self.__state = 'SUBMENU'
-                        self.__clear_board()
-                        self.__clear_scores()
+                        self.__board_manager.clear_board()
+                        self.__board_manager.clear_scores()
                     elif opt == 'OPTION2':
                         self.__state = 'PLAY_WITH_USER'
-                        self.__clear_board()
-                        self.__clear_scores()
+                        self.__board_manager.clear_board()
+                        self.__board_manager.clear_scores()
                     elif opt == 'OPTION3':
                         self.__state = 'EXIT'
 
     def __handle_end(self) -> None:
-        is_ended, winner = self.__game_manager.check_win(self.__board)
-        if is_ended or self.__game_manager.is_ended(self.__board):
+        is_ended, winner = self.__game_manager.check_win(self.__board_manager.board)
+        if is_ended or self.__game_manager.is_ended(self.__board_manager.board):
             if winner is None:
-                self.__clear_board()
+                self.__board_manager.clear_board()
                 self.__turn = randint(1, 2)
             else:
                 if winner == 1:
                     self.__x_wins += 1
                 else:
                     self.__o_wins += 1
-                self.__clear_board()
+                self.__board_manager.clear_board()
                 self.__turn = winner
 
     def launch_game(self) -> None:
@@ -125,24 +118,24 @@ class Game:
                 self.__submenu.show_submenu(self.__screen)
 
             if self.__state in ['PLAY_WITH_CPU', 'PLAY_WITH_USER']:
-                self.__board_manager.draw_board(self.__screen, self.__x_wins, self.__o_wins, self.__turn)
+                self.__display_manager.draw_board(self.__screen, self.__x_wins, self.__o_wins, self.__turn)
 
             self.__event_handler()
             
             if self.__state == 'PLAY_WITH_CPU':
                 self.__handle_end()
                 if self.__turn == 2:
-                    row, col = self.__ai.move(self.__board, self.__cpu_flag)
-                    self.__board[row][col] = 2
+                    row, col = self.__ai.move(self.__board_manager.board, self.__cpu_flag)
+                    self.__board_manager.board[row][col] = 2
                     self.__turn = 1
 
-                self.__board_manager.draw_xo(self.__board, self.__screen)
+                self.__display_manager.draw_xo(self.__board_manager.board, self.__screen)
                 self.__handle_end()
 
             if self.__state == 'PLAY_WITH_USER':
                 self.__handle_end()
 
-                self.__board_manager.draw_xo(self.__board, self.__screen)
+                self.__display_manager.draw_xo(self.__board_manager.board, self.__screen)
 
                 self.__handle_end()
 
