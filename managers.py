@@ -1,22 +1,25 @@
 import pygame
+from abc import abstractmethod, ABC
 
 from constants import HEIGHT, WIDTH, SQUARE_SIZE
 
+    
+
 class BoardManager:
     def __init__(self) -> None:
-        self.X_IMAGE = pygame.transform.scale(pygame.image.load("images/x.png"), (100, 100))
-        self.O_IMAGE = pygame.transform.scale(pygame.image.load("images/o.png"), (100, 100))
-        self.BG_IMAGE = pygame.transform.scale(pygame.image.load("images/board.png"), (WIDTH, HEIGHT))
-        self.font = pygame.font.Font('freesansbold.ttf', 40)
+        self.__X_IMAGE = pygame.transform.scale(pygame.image.load("images/x.png"), (100, 100))
+        self.__O_IMAGE = pygame.transform.scale(pygame.image.load("images/o.png"), (100, 100))
+        self.__BG_IMAGE = pygame.transform.scale(pygame.image.load("images/board.png"), (WIDTH, HEIGHT))
+        self.__font = pygame.font.Font('freesansbold.ttf', 40)
 
-    def display_text(self, screen, text, x, y):
-        text_surface = self.font.render(text, True, (0, 0, 0))
+    def __display_text(self, screen, text, x, y):
+        text_surface = self.__font.render(text, True, (0, 0, 0))
         screen.blit(text_surface, (x, y))
 
     def draw_board(self, screen, x_wins, o_wins, turn):
-        screen.blit(self.BG_IMAGE, (0, 0))
-        self.display_text(screen, f"{x_wins}", 350, 485)
-        self.display_text(screen, f"{o_wins}", 155, 485)
+        screen.blit(self.__BG_IMAGE, (0, 0))
+        self.__display_text(screen, f"{x_wins}", 350, 485)
+        self.__display_text(screen, f"{o_wins}", 155, 485)
         if turn == 1:
             pygame.draw.circle(screen, (255, 0, 0), (432, 502), 25, 3)
         else:
@@ -28,9 +31,9 @@ class BoardManager:
                 x = j * SQUARE_SIZE * 0.95
                 y = i * SQUARE_SIZE * 0.9
                 if board[i][j] == 1:
-                    screen.blit(self.X_IMAGE, (x + 125, y + 160))
+                    screen.blit(self.__X_IMAGE, (x + 125, y + 160))
                 if board[i][j] == 2:
-                    screen.blit(self.O_IMAGE, (x + 125, y + 160))
+                    screen.blit(self.__O_IMAGE, (x + 125, y + 160))
 
 
 class GameManager:
