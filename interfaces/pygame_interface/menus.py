@@ -4,7 +4,7 @@ from .constants import WIDTH, HEIGHT
 
 class MainMenu:
     def __init__(self) -> None:
-        self.MAIN_MENU_BG = pygame.transform.scale(pygame.image.load("images/main_menu.png"), (WIDTH, HEIGHT))
+        self.MAIN_MENU_BG = pygame.transform.scale(pygame.image.load("./interfaces/pygame_interface/images/main_menu.png"), (WIDTH, HEIGHT))
         self.OPTION1_SHAPE = (446, 69)
         self.OPTION2_SHAPE = (456, 77)
         self.OPTION3_SHAPE = (302, 72)
@@ -32,7 +32,7 @@ class MainMenu:
 
 class SubMenu:
     def __init__(self) -> None:
-        self.MAIN_MENU_BG = pygame.transform.scale(pygame.image.load("images/submenu.png"), (WIDTH, HEIGHT))
+        self.MAIN_MENU_BG = pygame.transform.scale(pygame.image.load("./interfaces/pygame_interface/images/submenu.png"), (WIDTH, HEIGHT))
         self.OPTION1_SHAPE = (312, 80)
         self.OPTION2_SHAPE = (312, 80)
         self.OPTION1_X_Y = (150, 285)

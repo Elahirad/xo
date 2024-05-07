@@ -3,9 +3,9 @@ from .constants import SQUARE_SIZE, WIDTH, HEIGHT
 
 class DisplayManager:
     def __init__(self) -> None:
-        self.__X_IMAGE = pygame.transform.scale(pygame.image.load("images/x.png"), (100, 100))
-        self.__O_IMAGE = pygame.transform.scale(pygame.image.load("images/o.png"), (100, 100))
-        self.__BG_IMAGE = pygame.transform.scale(pygame.image.load("images/board.png"), (WIDTH, HEIGHT))
+        self.__X_IMAGE = pygame.transform.scale(pygame.image.load("./interfaces/pygame_interface/images/x.png"), (100, 100))
+        self.__O_IMAGE = pygame.transform.scale(pygame.image.load("./interfaces/pygame_interface/images/o.png"), (100, 100))
+        self.__BG_IMAGE = pygame.transform.scale(pygame.image.load("./interfaces/pygame_interface/images/board.png"), (WIDTH, HEIGHT))
         self.__font = pygame.font.Font('freesansbold.ttf', 40)
 
     def __display_text(self, screen, text, x, y):
