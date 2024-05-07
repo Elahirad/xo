@@ -78,6 +78,8 @@ class TerminalUserInterface(UserInterface):
                         int,
                         choice.split(),
                     )
+                    if i not in [1, 2, 3] or j not in [1, 2, 3]:
+                        raise BaseException()
                     break
                 except:
                     print("Invalid input. Try again")
