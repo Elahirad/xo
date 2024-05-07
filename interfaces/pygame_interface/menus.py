@@ -1,6 +1,6 @@
 import pygame
 
-from constants import WIDTH, HEIGHT
+from .constants import WIDTH, HEIGHT
 
 class MainMenu:
     def __init__(self) -> None:
